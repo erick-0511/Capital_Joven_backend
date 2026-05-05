@@ -5,7 +5,6 @@ from datetime import datetime
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    rol: str = Field(default="user", pattern="^(admin|user|artist)$")
     
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)

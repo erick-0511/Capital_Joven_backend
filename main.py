@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import database, get_database
-from app.api.routes import film, film_metrics, admin, payment, user, session, ecdh
+from app.api.routes import user, session
 from app.services.session_service import SessionService
 from app.middleware.session_middleware import SessionInfoMiddleware
 
@@ -20,8 +20,8 @@ async def lifespan(app: FastAPI):
     await database.disconnect()
     
 app = FastAPI(
-    title="Vault Art API",
-    description="Sistema de películas para artistas locales",
+    title="Capital Joven API",
+    description="Sistema de administración de finanzas personales",
     version="1.0.0",
     lifespan=lifespan)
 
@@ -35,13 +35,8 @@ app.add_middleware(
 
 app.add_middleware(SessionInfoMiddleware)
 
-app.include_router(film.router, tags=["Film"])
-app.include_router(film_metrics.router, tags=["Film metrics"])
-app.include_router(admin.router, tags=["Admin"])
-app.include_router(payment.router, tags=["Payment"])
 app.include_router(user.router, tags=["User"])
 app.include_router(session.router, tags=["Sessions"])
-app.include_router(ecdh.router, tags=["ECDH"])
 
 @app.get("/")
 async def root():
