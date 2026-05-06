@@ -1,0 +1,31 @@
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import datetime
+from enum import Enum
+
+class SourceIncome(str, Enum):
+    NOMINA = "Nomina"
+    VENTAS = "Ventas"
+    INVERSIONES = "Inversiones"
+    REGALOS = "Regalos"
+    OTROS = "Otros"
+    
+class Frequency(str, Enum):
+    UNICO = "Único"
+    DIARIO = "Diario"
+    SEMANAL = "Semanal"
+    QUINCENAL = "Quincenal"
+    MENSUAL = "Mensual"
+    ANUAL = "Anual"
+
+class CreateIncome(BaseModel):
+    title: str
+    amount: float = Field(..., gt=0)
+    date: Optional[datetime] = None
+    origin: SourceIncome
+    description: Optional[str] = None
+    frequency: Frequency
+    
+    class Config:
+        from_attributes = True
+        populate_by_name = True

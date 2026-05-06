@@ -47,6 +47,7 @@ class UserService:
         
     async def get_user_profile(self, user_id: str) -> Optional[UserProfileResponse]:
         user = await self.db.user.find_one({"_id": ObjectId(user_id)}, {"_id": 1, "name": 1, "email": 1})
+        user["_id"] = str(user["_id"])
         if not user:
             return None
         return UserProfileResponse(**user)
