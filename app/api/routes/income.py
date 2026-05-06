@@ -4,8 +4,7 @@ from app.schemas.income_schema import CreateIncome, UpdateIncome, AllIncomeRespo
 from app.core.database import get_database
 from app.api.dependencies.deps import get_current_user_from_cookie
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 router = APIRouter(prefix="/income", tags=["Income"])
 

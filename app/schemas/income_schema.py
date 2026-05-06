@@ -44,7 +44,7 @@ class IncomeResponse(BaseModel):
     amount: float
     date: datetime
     origin: SourceIncome
-    description: str
+    description: Optional[str]
     frequency: Frequency
     
     class Config:
