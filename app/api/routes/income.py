@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.services.income_service import IncomeService
-from app.schemas.income_schema import CreateIncome, UpdateIncome, AllIncomeResponse
+from app.schemas.income_schema import CreateIncome, UpdateIncome, AllIncomeResponse, IncomeResponse
 from app.core.database import get_database
 from app.api.dependencies.deps import get_current_user_from_cookie
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -19,6 +19,17 @@ async def get_all_incomes(service: IncomeService = Depends(get_income_service), 
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No tienes ingresos registrados por el momento.")
         return [AllIncomeResponse(**income) for income in result]
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Ocurrió un error al obtener la información: {str(e)}")
+    
+@router.get("/{id_income}", response_model=IncomeResponse)
+async def get_income_details(id_income: str, service: IncomeService = Depends(get_income_service), 
+                            current_user: dict = Depends(get_current_user_from_cookie)):
+    try:
+        result = await service.get_income_details(id_income)
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No se encontró registro del ingreso seleccionado")
+        return IncomeResponse(**result)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Ocurrió un error al obtener la información: {str(e)}")
 

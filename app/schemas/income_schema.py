@@ -38,6 +38,15 @@ class AllIncomeResponse(BaseModel):
     title: str
     amount: float
     
+class IncomeResponse(BaseModel):
+    income_id: str = Field(alias="_id")
+    title: str
+    amount: float
+    date: datetime
+    origin: SourceIncome
+    description: str
+    frequency: Frequency
+    
     class Config:
         from_attributes = True
         populate_by_name = True
