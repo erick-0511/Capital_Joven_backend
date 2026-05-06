@@ -26,6 +26,18 @@ class CreateIncome(BaseModel):
     description: Optional[str] = None
     frequency: Frequency
     
+class UpdateIncome(BaseModel):
+    title: Optional[str] = None
+    amount: Optional[float] = None
+    origin: Optional[SourceIncome] = None
+    description: Optional[str] = None
+    frequency: Optional[Frequency] = None
+    
+class AllIncomeResponse(BaseModel):
+    income_id: str = Field(alias="_id")
+    title: str
+    amount: float
+    
     class Config:
         from_attributes = True
         populate_by_name = True
