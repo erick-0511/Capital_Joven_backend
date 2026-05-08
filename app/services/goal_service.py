@@ -15,11 +15,20 @@ def build_goal_response(goal):
         "end_date": goal.get("end_date"),
         "description": goal.get("description")
     }
+    
 class GoalService:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
 
-    #crear meta
+    async def get_all_goals(self, user_id: str):
+        goals = await self.db.goal.find({"user_id": user_id}).to_list()
+        if not goals:
+            return None
+        list_goals = []
+        for goal in goals:
+            list_goals.append(build_goal_response(goal))
+        return list_goals
+
     async def register_goal(self, goal_data: dict, user_id: str):
         goal_data.update({
             "created_at": datetime.now(timezone.utc),
@@ -32,7 +41,6 @@ class GoalService:
         goal = await self.db.goal.find_one({"_id": result.inserted_id})
         return build_goal_response(goal)
 
-    #update
     async def update_goal(self, goal_update: dict, goal_id: str, user_id: str):
         try:
             obj_id = ObjectId(goal_id)
@@ -51,7 +59,6 @@ class GoalService:
         update = await self.db.goal.find_one({"_id": ObjectId(goal_id)})
         return build_goal_response(update)
     
-    #eliminar meta
     async def delete_goal(self, goal_id: str, user_id: str) -> dict:
         try:
             obj_id = ObjectId(goal_id)
@@ -71,7 +78,6 @@ class GoalService:
             raise ValueError("Ocurrió un error al eliminar la meta")
         return {"message": "La meta se elimino correctamente."}
     
-        #Agregar dinero
     async def add_amount(self, goal_id: str, amount:float, user_id: str):
         try:
             obj_id = ObjectId(goal_id)

@@ -33,3 +33,7 @@ class ResponseGoal(BaseModel):
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
     description: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+        populate_by_name = True
