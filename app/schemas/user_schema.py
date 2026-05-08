@@ -35,6 +35,7 @@ class UserProfileResponse(BaseModel):
     id_user : str = Field(alias="_id")
     name: str
     email: EmailStr
+    university: str
 
     class Config:
         from_attributes = True
