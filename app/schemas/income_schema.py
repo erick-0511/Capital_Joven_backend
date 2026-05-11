@@ -5,6 +5,7 @@ from enum import Enum
 
 class SourceIncome(str, Enum):
     NOMINA = "Nomina"
+    BECA = "Beca"
     VENTAS = "Ventas"
     INVERSIONES = "Inversiones"
     REGALOS = "Regalos"
@@ -12,11 +13,9 @@ class SourceIncome(str, Enum):
     
 class Frequency(str, Enum):
     UNICO = "Único"
-    DIARIO = "Diario"
     SEMANAL = "Semanal"
     QUINCENAL = "Quincenal"
     MENSUAL = "Mensual"
-    ANUAL = "Anual"
 
 class CreateIncome(BaseModel):
     title: str

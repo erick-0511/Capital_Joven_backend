@@ -4,35 +4,25 @@ from datetime import datetime
 from enum import Enum
 
 class CategoryBill(str, Enum):
-    VIVIENDA = "Vivienda"
-    ALIMENTACION = "Alimentación"
+    COMIDA = "Comida"
     TRANSPORTE = "Transporte"
+    SERVICIOS = "Servicios"
     SALUD = "Salud"
     ENTRETENIMIENTO = "Entretenimiento"
-    ESCUELA = "Escuela"
-    RETIROS = "Retiros"
+    CASA = "Casa"
     OTROS = "Otros"
-    
-class PaymentMethod(str, Enum):
-    EFECTIVO = "Efectivo"
-    DEBITO = "Débito"
-    CREDITO = "Crédito"
-    TRANSFERENCIA = "Transferencia"
     
 class Frequency(str, Enum):
     UNICO = "Único"
-    DIARIO = "Diario"
     SEMANAL = "Semanal"
     QUINCENAL = "Quincenal"
     MENSUAL = "Mensual"
-    ANUAL = "Anual"
     
 class CreateBill(BaseModel):
     title: str
     amount: float
     date: Optional[datetime] = None
     category: CategoryBill
-    method: PaymentMethod
     description: Optional[str] = None
     frequency: Frequency
     
@@ -40,7 +30,6 @@ class UpdateBill(BaseModel):
     title: Optional[str] = None
     amount: Optional[float] = None
     categoty: Optional[CategoryBill] = None
-    mehtod: Optional[PaymentMethod] = None
     description: Optional[str] = None
     frequency: Optional[Frequency] = None
     
@@ -55,7 +44,6 @@ class BillResponse(BaseModel):
     amount: float
     date: datetime
     category: CategoryBill
-    method: PaymentMethod
     description: Optional[str] = None
     frequency: Frequency
     

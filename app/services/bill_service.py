@@ -25,7 +25,9 @@ class BillService:
         return result
         
     async def register_bill(self, bill_data: dict, user_id: str) -> dict:
-        bill_data.update({"date": datetime.now(timezone.utc), "user_id": user_id})
+        if not bill_data.get("date"):
+            bill_data["date"] = datetime.now(timezone.utc)
+        bill_data["user_id"] = user_id
         bill_result = await self.db.bill.insert_one(bill_data)
         if bill_result.inserted_id:
             return {"message": "El gasto se ha registrado correctamente."}

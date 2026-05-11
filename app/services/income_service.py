@@ -25,7 +25,9 @@ class IncomeService:
         return result
         
     async def register_income(self, income_data: dict, user_id: str) -> dict:
-        income_data.update({"date": datetime.now(timezone.utc), "user_id": user_id})
+        if not income_data.get("date"):
+            income_data["date"] = datetime.now(timezone.utc)
+        income_data["user_id"] = user_id
         income_result = await self.db.income.insert_one(income_data)
         if income_result.inserted_id:
             return {"message": "El ingreso se ha registrado correctamente."}

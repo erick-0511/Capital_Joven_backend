@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import database, get_database
-from app.api.routes import income, user, session, bill, goal
+from app.api.routes import income, user, session, bill, goal, dashboard
 from app.services.session_service import SessionService
 from app.middleware.session_middleware import SessionInfoMiddleware
 
@@ -40,6 +40,7 @@ app.include_router(session.router, tags=["Sessions"])
 app.include_router(income.router, tags=["Income"])
 app.include_router(bill.router, tags=["Bill"])
 app.include_router(goal.router, tags=["Goal"])
+app.include_router(dashboard.router, tags=["Dashboard"])
 
 @app.get("/")
 async def root():

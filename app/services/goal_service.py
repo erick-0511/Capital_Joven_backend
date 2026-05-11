@@ -28,6 +28,12 @@ class GoalService:
         for goal in goals:
             list_goals.append(build_goal_response(goal))
         return list_goals
+    
+    async def get_goal_details(self, goal_id: str):
+        result = await self.db.goal.find_one({"_id": ObjectId(goal_id)})
+        if not result:
+            return None
+        return build_goal_response(result)
 
     async def register_goal(self, goal_data: dict, user_id: str):
         goal_data.update({

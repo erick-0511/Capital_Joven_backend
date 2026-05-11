@@ -11,7 +11,7 @@ router = APIRouter(prefix="/goal", tags=["Goal"])
 async def get_goal_service(db: AsyncIOMotorDatabase = Depends(get_database)):
     return GoalService(db)
 
-@router.get("/", response_model=Optional[List[ResponseGoal]])
+@router.get("/", response_model=List[ResponseGoal])
 async def get_all_goals(service: GoalService = Depends(get_goal_service), current_user: dict = Depends(get_current_user_from_cookie)):
     try:
         result = await service.get_all_goals(current_user["id_user"])
@@ -20,6 +20,16 @@ async def get_all_goals(service: GoalService = Depends(get_goal_service), curren
         return [ResponseGoal(**goal) for goal in result]
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error al obtener las metas: {str(e)}")
+    
+@router.get("/{goal_id}", response_model=ResponseGoal)
+async def get_goal_details(goal_id: str, service: GoalService = Depends(get_goal_service), current_user: dict = Depends(get_current_user_from_cookie)):
+    try:
+        result = await service.get_goal_details(goal_id)
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No se enocntró la meta registrada: {str(e)}")
+        return ResponseGoal(**result)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Ocurrió un error al obtener la meta: {str(e)}")
 
 @router.post("/register", response_model=ResponseGoal, status_code=status.HTTP_201_CREATED)
 async def register_goal(goal_data: CreateGoal, 
