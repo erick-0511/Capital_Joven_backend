@@ -51,3 +51,32 @@ class UserService:
         if not user:
             return None
         return UserProfileResponse(**user)
+    
+    async def update_user(self, user_update: dict, user_id: str) -> dict:
+        try:
+            obj_id = ObjectId(user_id)
+        except:
+            raise ValueError("ID no valido")
+        
+        user= await self.db.user.find_one({"_id": obj_id})
+        if not user:
+            raise ValueError("No se encontro el usuario")
+        
+        if "password" in user_update:
+            user_update["password"] = bcrypt.hashpw(
+                user_update["password"].encode('utf-8'),
+                bcrypt.gensalt(rounds=12)
+            ).decode('utf-8')
+
+        result = await self.db.user.update_one(
+            {"_id": obj_id},
+            {"$set": user_update}
+        )
+
+        if result.modified_count == 0:
+            raise ValueError("Error al actualizar los datos")
+        
+        updated = await self.db.user.find_one({"_id": obj_id})
+        updated["_id"] = str(updated["_id"])
+
+        return UserProfileResponse(**updated)

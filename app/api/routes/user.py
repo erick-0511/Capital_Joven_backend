@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.database import get_database
 from app.schemas.user_schema import UserCreate, UserLogin
-from app.schemas.user_schema import UserLoginResponse, UserRegisterResponse, UserProfileResponse
+from app.schemas.user_schema import UserLoginResponse, UserRegisterResponse, UserProfileResponse, UserUpdate
 from app.services.user_service import UserService
 from app.api.dependencies.deps import get_current_user_from_cookie
 from datetime import timedelta
@@ -57,3 +57,21 @@ async def colse_all_sessions(request: Request, response: Response, current_user:
         count = await service.session_service.invalidate_all_sessions(current_user["id_user"])
     response.delete_cookie("session_token")
     return {"message": f"Se cerraron {count} sesiones en todos los dispositivos"}
+
+@router.put("/update", response_model=UserProfileResponse)
+async def update_user(request: Request, 
+                      response: Response,
+                      user_update: UserUpdate, 
+                      current_user: dict = Depends(get_current_user_from_cookie),
+                      service: UserService = Depends(get_user_service)):
+    session_id = request.cookies.get("session_token")
+    try:
+        return await service.update_user(
+            user_update.model_dump(exclude_unset=True),
+            current_user["id_user"]
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al actualizar los datos: {str(e)}"
+        )
