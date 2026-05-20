@@ -17,7 +17,7 @@ class Settings(BaseSettings):
         if self.ENVIROMENT == "production":
             return [""]
         else:
-            return ["http://localhost:3000", "http://127.0.0.1", "http://localhost:5173"]
+            return ["http://localhost:3000", "http://127.0.0.1", "http://localhost:4321"]
         
     class Config:
         env_file = ".env"
